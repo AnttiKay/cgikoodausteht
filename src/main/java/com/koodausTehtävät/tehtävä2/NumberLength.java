@@ -17,12 +17,12 @@ public class NumberLength {
         int result;
 
         for (int i = 0; i < array.length; i++) {
-            if (array[i] < 0) {
-                throw new InvalidParameterException();
-            }
-            if (i != 0) {
-                // Math.abs is used here so [1, 4, 10] and [4, 1, 10] arrays both return 2 otherwise result for [4, 1, 10] array would be -4.
-                result = Math.abs(array[i] - array[i - 1]) - 1;
+            for (int j = 0; j < array.length; j++){
+                if (array[j] < 0) {
+                    throw new InvalidParameterException();
+                }
+                // Math.abs is used here so that we get the distance to the other number
+                result = Math.abs(array[i] - array[j]) - 1;
 
                 if (result > 0 && result < smallest) {
                     smallest = result;

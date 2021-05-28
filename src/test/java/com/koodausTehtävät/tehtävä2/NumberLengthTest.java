@@ -72,4 +72,17 @@ public class NumberLengthTest {
         int[] array = null;
         assertEquals(-1, NumberLength.getSmallestNaturalNumber(array));
     }
+    @Test
+    public void testRandomizedArray() {
+        int[] array = {1,5,8,9};
+        int[] randomizedArray = {9,1,5,8};
+
+        assertEquals(NumberLength.getSmallestNaturalNumber(array), NumberLength.getSmallestNaturalNumber(randomizedArray));
+    }
+    @Test
+    public void testAscendingNumbers() {
+        int[] array = {1,2,3,4,5};
+        // abs(1-3)-1 = 1 
+        assertEquals(1, NumberLength.getSmallestNaturalNumber(array));
+    }
 }
