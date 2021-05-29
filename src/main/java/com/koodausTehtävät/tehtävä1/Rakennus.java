@@ -1,12 +1,13 @@
 package com.koodausTehtävät.tehtävä1;
 
+import java.util.Calendar;
 import java.util.Date;
 
 public class Rakennus {
     // Kiinteistö jolla rakennus sijaitsee.
     private Kiinteistö Kiinteistö;
     private Henkilö omistaja;
-    private int rakennusTunnus;
+    private String rakennusTunnus;
 
     private int kokonaisHuoneistoAla;
     private int kokonaisAla;
@@ -24,7 +25,7 @@ public class Rakennus {
                 other.osoite, other.koordinaatit, other.valmistumispäivä, other.käyttötarkoitus);
     }
 
-    public Rakennus(Kiinteistö kiinteistö, Henkilö omistaja, int rakennusTunnus, int kokonaisHuoneistoAla,
+    public Rakennus(Kiinteistö kiinteistö, Henkilö omistaja, String rakennusTunnus, int kokonaisHuoneistoAla,
             int kokonaisAla, String osoite, String koordinaatit, Date valmistumispäivä, String käyttötarkoitus) {
         Kiinteistö = kiinteistö;
         this.omistaja = omistaja;
@@ -35,6 +36,10 @@ public class Rakennus {
         this.koordinaatit = koordinaatit;
         this.valmistumispäivä = valmistumispäivä;
         this.käyttötarkoitus = käyttötarkoitus;
+    }
+    // TODO: add functionality
+    public boolean validoitu(){
+        return true;
     }
 
     public Kiinteistö getKiinteistö() {
@@ -50,14 +55,30 @@ public class Rakennus {
     }
 
     public void setOmistaja(Henkilö omistaja) {
-        this.omistaja = omistaja;
+        // Katsotaan, onko rakennuksella jo omistaja. Jos on niin asetetaan omistaja
+        // tälle rakennuksele. Jos ei, poistetaan vanhan omistajan listasta tämä
+        // rakennus ja lisätään se uuden omistajan listaan ja vaihdetaan omistaja uudeksi omistajaksi.
+
+        if (this.omistaja == null) {
+            if (omistaja.validoitu()) {
+                this.omistaja = omistaja;
+                omistaja.lisääOmistettuRakennus(this);
+            }
+        } else {
+            if (omistaja.validoitu()) {
+                this.omistaja.poistaOmistettuRakennus(this); 
+
+                this.omistaja = omistaja;
+                omistaja.lisääOmistettuRakennus(this);
+            }
+        }
     }
 
-    public int getRakennusTunnus() {
+    public String getRakennusTunnus() {
         return rakennusTunnus;
     }
 
-    public void setRakennusTunnus(int rakennusTunnus) {
+    public void setRakennusTunnus(String rakennusTunnus) {
         this.rakennusTunnus = rakennusTunnus;
     }
 
@@ -97,8 +118,17 @@ public class Rakennus {
         return valmistumispäivä;
     }
 
-    public void setValmistumispäivä(Date valmistumispäivä) {
-        this.valmistumispäivä = valmistumispäivä;
+    public boolean setValmistumispäivä(int date, int month, int year) {
+        if ((date < 0 && date > 31) || (month < 1 && date > 12)) {
+            return false;
+        }
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.MONTH, month - 1);
+        c.set(Calendar.DATE, date);
+        c.set(Calendar.YEAR, year);
+
+        this.valmistumispäivä = c.getTime();
+        return true;
     }
 
     public String getKäyttötarkoitus() {

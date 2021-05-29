@@ -42,41 +42,78 @@ public class Henkilö {
         this.omistetutRakennukset = omistetutRakennukset;
         this.omistetutKiinteistöt = omistetutKiinteistöt;
     }
+    // TODO: add functionality
+    public boolean validoitu(){
+        return true;
+    }
 
-    public void lisääOmistettuRakennus(Rakennus rakennus) {
+    public boolean lisääOmistettuRakennus(Rakennus rakennus) {
+        if(!rakennus.validoitu()){
+            return false;
+        }
         if (nimi.equals(rakennus.getOmistaja().getNimi())
                 && henkilötunnus.equals(rakennus.getOmistaja().getHenkilötunnus())) {
-            omistetutRakennukset.add(rakennus);
+            if (!omistetutRakennukset.contains(rakennus)) {
+                omistetutRakennukset.add(rakennus);
+                return true;
+            } else {
+                return false;
+            }
         } else {
             throw new InvalidParameterException(
                     "Tämä henkilö ei omista tätä rakennusta, et voi lisätä sitä tälle henkilölle.");
         }
     }
 
-    public void poistaOmistettuRakennus(Rakennus rakennus) {
+    public boolean poistaOmistettuRakennus(Rakennus rakennus) {
+        if(!rakennus.validoitu()){
+            return false;
+        }
         if (nimi.equals(rakennus.getOmistaja().getNimi())
                 && henkilötunnus.equals(rakennus.getOmistaja().getHenkilötunnus())) {
-            omistetutRakennukset.remove(rakennus);
+            if (omistetutRakennukset.contains(rakennus)) {
+                omistetutRakennukset.remove(rakennus);
+                return true;
+            } else {
+                return false;
+            }
         } else {
             throw new InvalidParameterException(
                     "Tämä henkilö ei omista tätä rakennusta, et voi poistaa sitä tältä henkilöltä.");
         }
     }
 
-    public void lisääOmistettuKiinteistö(Kiinteistö kiinteistö) {
+    public boolean lisääOmistettuKiinteistö(Kiinteistö kiinteistö) {
+        if(!kiinteistö.validoitu()){
+            return false;
+        }
         if (nimi.equals(kiinteistö.getOmistaja().getNimi())
                 && henkilötunnus.equals(kiinteistö.getOmistaja().getHenkilötunnus())) {
-            omistetutKiinteistöt.add(kiinteistö);
+            if (!omistetutKiinteistöt.contains(kiinteistö)) {
+                omistetutKiinteistöt.add(kiinteistö);
+                return true;
+            } else {
+                return false;
+            }
+
         } else {
             throw new InvalidParameterException(
                     "Tämä henkilö ei omista tätä kiinteistöä, et voi lisätä sitä tälle henkilölle.");
         }
     }
 
-    public void poistaOmistettuKiinteistö(Kiinteistö kiinteistö) {
+    public boolean poistaOmistettuKiinteistö(Kiinteistö kiinteistö) {
+        if(!kiinteistö.validoitu()){
+            return false;
+        }
         if (nimi.equals(kiinteistö.getOmistaja().getNimi())
                 && henkilötunnus.equals(kiinteistö.getOmistaja().getHenkilötunnus())) {
-            omistetutKiinteistöt.remove(kiinteistö);
+            if (omistetutKiinteistöt.contains(kiinteistö)) {
+                omistetutKiinteistöt.remove(kiinteistö);
+                return true;
+            } else {
+                return false;
+            }
         } else {
             throw new InvalidParameterException(
                     "Tämä henkilö ei omista tätä kiinteistöä, et voi poistaa sitä tältä henkilöltä.");

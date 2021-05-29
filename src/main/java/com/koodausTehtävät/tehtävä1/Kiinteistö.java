@@ -29,13 +29,34 @@ public class Kiinteistö {
         this.onKiinteistö = onKiinteistö;
         this.osoite = osoite;
     }
+    // TODO: add functionality
+    public boolean validoitu(){
+        return true;
+    }
 
     public Henkilö getOmistaja() {
         return omistaja;
     }
 
     public void setOmistaja(Henkilö omistaja) {
-        this.omistaja = omistaja;
+        // Katsotaan, onko kiinteistöllä jo omistaja. Jos on niin asetetaan omistaja
+        // tälle kiinteistölle. Jos ei, poistetaan vanhan omistajan listasta tämä
+        // kiinteistö ja lisätään se uuden omistajan listaan ja vaihdetaan omistaja uudeksi omistajaksi.
+
+        if (this.omistaja == null) {
+            if (omistaja.validoitu()) {
+                this.omistaja = omistaja;
+                omistaja.lisääOmistettuKiinteistö(this);
+            }
+        } else {
+            if (omistaja.validoitu()) {
+                this.omistaja.poistaOmistettuKiinteistö(this);
+
+                this.omistaja = omistaja;
+                omistaja.lisääOmistettuKiinteistö(this);
+            }
+        }
+
     }
 
     public String getKiinteistönTunnus() {
@@ -84,7 +105,6 @@ public class Kiinteistö {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-
 
         sb.append("Kiinteistön tiedot: \n");
         sb.append("------------------------------------------------------------------------\n");
