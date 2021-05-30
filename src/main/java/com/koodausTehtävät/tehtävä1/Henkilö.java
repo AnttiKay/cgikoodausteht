@@ -42,13 +42,20 @@ public class Henkilö {
         this.omistetutRakennukset = omistetutRakennukset;
         this.omistetutKiinteistöt = omistetutKiinteistöt;
     }
-    // TODO: add functionality
-    public boolean validoitu(){
-        return true;
+
+    public boolean validoitu() {
+        if (nimi != null && henkilötunnus != null && kansalaisuus != null && äidinkieli != null
+                && syntymäaika != null) {
+            return true;
+
+        } else {
+            return false;
+        }
+
     }
 
     public boolean lisääOmistettuRakennus(Rakennus rakennus) {
-        if(!rakennus.validoitu()){
+        if (!rakennus.validoitu()) {
             return false;
         }
         if (nimi.equals(rakennus.getOmistaja().getNimi())
@@ -66,13 +73,14 @@ public class Henkilö {
     }
 
     public boolean poistaOmistettuRakennus(Rakennus rakennus) {
-        if(!rakennus.validoitu()){
+        if (!rakennus.validoitu()) {
             return false;
         }
         if (nimi.equals(rakennus.getOmistaja().getNimi())
                 && henkilötunnus.equals(rakennus.getOmistaja().getHenkilötunnus())) {
             if (omistetutRakennukset.contains(rakennus)) {
                 omistetutRakennukset.remove(rakennus);
+                rakennus.setOmistaja(null);
                 return true;
             } else {
                 return false;
@@ -84,7 +92,7 @@ public class Henkilö {
     }
 
     public boolean lisääOmistettuKiinteistö(Kiinteistö kiinteistö) {
-        if(!kiinteistö.validoitu()){
+        if (!kiinteistö.validoitu()) {
             return false;
         }
         if (nimi.equals(kiinteistö.getOmistaja().getNimi())
@@ -103,13 +111,14 @@ public class Henkilö {
     }
 
     public boolean poistaOmistettuKiinteistö(Kiinteistö kiinteistö) {
-        if(!kiinteistö.validoitu()){
+        if (!kiinteistö.validoitu()) {
             return false;
         }
         if (nimi.equals(kiinteistö.getOmistaja().getNimi())
                 && henkilötunnus.equals(kiinteistö.getOmistaja().getHenkilötunnus())) {
             if (omistetutKiinteistöt.contains(kiinteistö)) {
                 omistetutKiinteistöt.remove(kiinteistö);
+                kiinteistö.setOmistaja(null);
                 return true;
             } else {
                 return false;
@@ -236,12 +245,14 @@ public class Henkilö {
         }
         if (omistetutKiinteistöt.size() > 0) {
             sb.append("Henkilön omistamat kiinteistöt: \n");
+            sb.append("------------------------------------------------------------------------\n\n");
             for (Kiinteistö kiinteistö : omistetutKiinteistöt) {
                 sb.append(kiinteistö.toString());
             }
         }
         if (omistetutRakennukset.size() > 0) {
             sb.append("Henkilön omistamat rakennukset: \n");
+            sb.append("------------------------------------------------------------------------\n\n");
             for (Rakennus rakennus : omistetutRakennukset) {
                 sb.append(rakennus.toString());
             }

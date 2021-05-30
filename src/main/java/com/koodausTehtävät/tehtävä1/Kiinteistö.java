@@ -1,5 +1,9 @@
 package com.koodausTehtävät.tehtävä1;
 
+import java.security.InvalidParameterException;
+import java.util.ArrayList;
+import java.util.List;
+
 public class Kiinteistö {
     // Kiinteistön omistava henkilö.
     private Henkilö omistaja;
@@ -12,26 +16,76 @@ public class Kiinteistö {
     private boolean onKiinteistö;
     // kiinteistön tai muun rekisteriyksikön osoitetiedo
     private String osoite;
+    private List<Rakennus> rakennuksetKiinteistöllä = new ArrayList<>();
 
     public Kiinteistö() {
     }
 
     // Kopiointi konstruktori
     public Kiinteistö(Kiinteistö other) {
-        this(other.omistaja, other.kiinteistönTunnus, other.kiinteistönNimi, other.onKiinteistö, other.osoite);
+        this(other.omistaja, other.kiinteistönTunnus, other.kiinteistönNimi, other.onKiinteistö, other.osoite,
+                other.rakennuksetKiinteistöllä);
     }
 
     public Kiinteistö(Henkilö omistaja, String kiinteistönTunnus, String kiinteistönNimi, boolean onKiinteistö,
-            String osoite) {
+            String osoite, List<Rakennus> rakennuksetKiinteistöllä) {
         this.omistaja = omistaja;
         this.kiinteistönTunnus = kiinteistönTunnus;
         this.kiinteistönNimi = kiinteistönNimi;
         this.onKiinteistö = onKiinteistö;
         this.osoite = osoite;
+        this.rakennuksetKiinteistöllä = rakennuksetKiinteistöllä;
     }
-    // TODO: add functionality
-    public boolean validoitu(){
-        return true;
+
+    public boolean lisääRakennusKiinteistöön(Rakennus rakennus) {
+        if (!rakennus.validoitu()) {
+            return false;
+        }
+        if (rakennus.getKiinteistö().equals(this)) {
+            if (!rakennuksetKiinteistöllä.contains(rakennus)) {
+                rakennuksetKiinteistöllä.add(rakennus);
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            throw new InvalidParameterException(
+                    "Tämä rakennus ei sijaitse tällä kiinteistöllä, et voi lisätä sitä tähän kiinteistöön.");
+        }
+    }
+
+    public boolean poistaRakennusKiinteistöstä(Rakennus rakennus) {
+        if (!rakennus.validoitu()) {
+            return false;
+        }
+        if (rakennus.getKiinteistö().equals(this)) {
+            if (rakennuksetKiinteistöllä.contains(rakennus)) {
+                rakennuksetKiinteistöllä.remove(rakennus);
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            throw new InvalidParameterException(
+                    "Tällä kiinteistöllä ei ole tätä rakennusta, joten et voi poistaa sitä");
+        }
+    }
+
+    public boolean validoitu() {
+        if (omistaja != null && kiinteistönTunnus != null && kiinteistönNimi != null && osoite != null) {
+            return true;
+
+        } else {
+            return false;
+        }
+    }
+
+    public List<Rakennus> getRakennuksetKiinteistöllä() {
+        return rakennuksetKiinteistöllä;
+    }
+
+    public void setRakennuksetKiinteistöllä(List<Rakennus> rakennuksetKiinteistöllä) {
+        this.rakennuksetKiinteistöllä = rakennuksetKiinteistöllä;
     }
 
     public Henkilö getOmistaja() {
@@ -41,8 +95,12 @@ public class Kiinteistö {
     public void setOmistaja(Henkilö omistaja) {
         // Katsotaan, onko kiinteistöllä jo omistaja. Jos on niin asetetaan omistaja
         // tälle kiinteistölle. Jos ei, poistetaan vanhan omistajan listasta tämä
-        // kiinteistö ja lisätään se uuden omistajan listaan ja vaihdetaan omistaja uudeksi omistajaksi.
+        // kiinteistö ja lisätään se uuden omistajan listaan ja vaihdetaan omistaja
+        // uudeksi omistajaksi.
 
+        if(omistaja == null){
+            return;
+        }
         if (this.omistaja == null) {
             if (omistaja.validoitu()) {
                 this.omistaja = omistaja;
@@ -108,7 +166,7 @@ public class Kiinteistö {
 
         sb.append("Kiinteistön tiedot: \n");
         sb.append("------------------------------------------------------------------------\n");
-        sb.append("Omistaja: \n");
+        sb.append("Omistajan tiedot: \n");
         sb.append("Omistajan nimi: " + omistaja.getNimi() + "\n");
         sb.append("Omistajan henkilötunnus: " + omistaja.getHenkilötunnus() + "\n");
         sb.append("------------------------------------------------------------------------\n");

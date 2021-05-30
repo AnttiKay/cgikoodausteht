@@ -5,7 +5,7 @@ import java.util.Date;
 
 public class Rakennus {
     // Kiinteistö jolla rakennus sijaitsee.
-    private Kiinteistö Kiinteistö;
+    private Kiinteistö kiinteistö;
     private Henkilö omistaja;
     private String rakennusTunnus;
 
@@ -21,13 +21,13 @@ public class Rakennus {
 
     // Kopiointi konstruktori
     public Rakennus(Rakennus other) {
-        this(other.Kiinteistö, other.omistaja, other.rakennusTunnus, other.kokonaisHuoneistoAla, other.kokonaisAla,
+        this(other.kiinteistö, other.omistaja, other.rakennusTunnus, other.kokonaisHuoneistoAla, other.kokonaisAla,
                 other.osoite, other.koordinaatit, other.valmistumispäivä, other.käyttötarkoitus);
     }
 
     public Rakennus(Kiinteistö kiinteistö, Henkilö omistaja, String rakennusTunnus, int kokonaisHuoneistoAla,
             int kokonaisAla, String osoite, String koordinaatit, Date valmistumispäivä, String käyttötarkoitus) {
-        Kiinteistö = kiinteistö;
+        this.kiinteistö = kiinteistö;
         this.omistaja = omistaja;
         this.rakennusTunnus = rakennusTunnus;
         this.kokonaisHuoneistoAla = kokonaisHuoneistoAla;
@@ -37,17 +37,35 @@ public class Rakennus {
         this.valmistumispäivä = valmistumispäivä;
         this.käyttötarkoitus = käyttötarkoitus;
     }
-    // TODO: add functionality
-    public boolean validoitu(){
-        return true;
+
+    public boolean validoitu() {
+        if (rakennusTunnus != null && osoite != null) {
+            return true;
+
+        } else {
+            return false;
+        }
     }
 
     public Kiinteistö getKiinteistö() {
-        return Kiinteistö;
+        return kiinteistö;
     }
 
     public void setKiinteistö(Kiinteistö kiinteistö) {
-        Kiinteistö = kiinteistö;
+        if (this.kiinteistö == null) {
+            if (kiinteistö.validoitu()) {
+                this.kiinteistö = kiinteistö;
+                kiinteistö.lisääRakennusKiinteistöön(this);
+            }
+        } else {
+            if (kiinteistö.validoitu()) {
+                this.kiinteistö.poistaRakennusKiinteistöstä(this);
+
+                this.kiinteistö = kiinteistö;
+                kiinteistö.lisääRakennusKiinteistöön(this);
+            }
+        }
+        this.kiinteistö = kiinteistö;
     }
 
     public Henkilö getOmistaja() {
@@ -57,8 +75,13 @@ public class Rakennus {
     public void setOmistaja(Henkilö omistaja) {
         // Katsotaan, onko rakennuksella jo omistaja. Jos on niin asetetaan omistaja
         // tälle rakennuksele. Jos ei, poistetaan vanhan omistajan listasta tämä
-        // rakennus ja lisätään se uuden omistajan listaan ja vaihdetaan omistaja uudeksi omistajaksi.
+        // rakennus ja lisätään se uuden omistajan listaan ja vaihdetaan omistaja
+        // uudeksi omistajaksi.
 
+        if(omistaja == null){
+            return;
+        }
+        
         if (this.omistaja == null) {
             if (omistaja.validoitu()) {
                 this.omistaja = omistaja;
@@ -66,7 +89,7 @@ public class Rakennus {
             }
         } else {
             if (omistaja.validoitu()) {
-                this.omistaja.poistaOmistettuRakennus(this); 
+                this.omistaja.poistaOmistettuRakennus(this);
 
                 this.omistaja = omistaja;
                 omistaja.lisääOmistettuRakennus(this);
@@ -147,7 +170,13 @@ public class Rakennus {
             return false;
         }
         Rakennus that = (Rakennus) o;
-        return Kiinteistö.equals(that.Kiinteistö) && omistaja.equals(that.omistaja);
+        if((this.omistaja != null && that.omistaja != null) && (this.kiinteistö != null && that.kiinteistö != null)){
+            return kiinteistö.equals(that.kiinteistö) && omistaja.equals(that.omistaja)
+                && rakennusTunnus.equals(that.rakennusTunnus);
+        }else{
+            return rakennusTunnus.equals(that.rakennusTunnus);
+        }
+        
     }
 
     @Override
@@ -155,13 +184,13 @@ public class Rakennus {
         StringBuilder sb = new StringBuilder();
         sb.append("Rakennuksen tiedot: \n");
         sb.append("------------------------------------------------------------------------\n");
-        sb.append("Omistaja: \n");
+        sb.append("Omistajan tiedot: \n");
         sb.append("Omistajan nimi: " + omistaja.getNimi() + "\n");
         sb.append("Omistajan henkilötunnus: " + omistaja.getHenkilötunnus() + "\n");
         sb.append("------------------------------------------------------------------------\n");
         sb.append("Kiinteistön tiedot: \n");
-        sb.append("Kiinteistön nimi: " + Kiinteistö.getKiinteistönNimi() + "\n");
-        sb.append("Kiinteistön tunnus: " + Kiinteistö.getKiinteistönTunnus() + "\n");
+        sb.append("Kiinteistön nimi: " + kiinteistö.getKiinteistönNimi() + "\n");
+        sb.append("Kiinteistön tunnus: " + kiinteistö.getKiinteistönTunnus() + "\n");
         sb.append("------------------------------------------------------------------------\n");
         sb.append("Rakennuksen rakennusTunnus: " + rakennusTunnus + "\n");
         sb.append("Rakennuksen kokonaisHuoneistoAla: " + kokonaisHuoneistoAla + " m^2\n");
